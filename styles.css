@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;900&display=swap");
 
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 body {
 	background: #3c3c3c;
 }
@@ -16,13 +22,49 @@ body {
 .list-suspects {
 	font-family: "Rubik", sans-serif;
 	color: white;
+	font-weight: 500;
+	font-style: italic;
 }
 
 .margin-5 {
 	margin-top: 2%;
 }
 .tit-list-suspects {
-	color: tomato;
+	padding-top: 8%;
+	color: #c7f5db;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.tit-points {
+	color: #c7f5db;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+#name_suspect {
 	font-size: 18px;
 	font-weight: bold;
+}
+
+.name_correct {
+	color: #faffa8;
+	padding: 2%;
+	background-color: rgba(240, 240, 240, 0.1);
+}
+
+.name_incorrect {
+	color: #f56d8f;
+	padding: 2%;
+	/* background-color: rgba(255, 255, 255, 0.359); */
+}
+
+#person_murder {
+	color: #ee918b;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+#person_murder span {
+	color: #c7f5db;
 }

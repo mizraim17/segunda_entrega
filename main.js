@@ -29,8 +29,12 @@ const weaponsArray = [
 ];
 
 //Function generate number random depending of size of array
-let doRandom = (arrSearch) =>
-	Math.round(Math.random() * (arrSearch.length - 1));
+let doRandom = (arrSearch) => {
+	// console.log("tamaño array", arrSearch.length - 1);
+	let x = Math.round(Math.random() * (arrSearch.length - 1));
+	// console.log("numero random", x);
+	return x;
+};
 
 //Generate array without person die because he dont cant be the murder
 let listWithoutMurder = (nameDiedPerson) => {
@@ -47,7 +51,7 @@ let genereAssesinMurder = () => {
 		numDiedPerson = parseInt(doRandom(suspectsArray)),
 		listNew = listWithoutMurder(suspectsArray[numDiedPerson].nombre);
 
-	console.log(`listNew ${listNew.length}`);
+	// console.log(`listNew ${listNew.length}`);
 
 	arrayAssesinDied[1] = suspectsArray[numDiedPerson].id;
 	arrayAssesinDied[0] = listNew;
@@ -71,7 +75,7 @@ let generateInstru = (arrWitMurd) => {
 	for (element in arrWitMurd) {
 		instructions =
 			instructions +
-			`${arrWitMurd[element].id}.- ${arrWitMurd[element].nombre}\n`;
+			`${arrWitMurd[element].id}.-  ${arrWitMurd[element].nombre}\n`;
 		counter++;
 	}
 
@@ -144,7 +148,7 @@ let menu = (asseMurder) => {
 
 					optiAssesin = parseInt(prompt(`${instructions}`));
 					coins++;
-
+					gene;
 					console.log("numAssesin", numAssesin);
 					console.log("optiAssesin", optiAssesin);
 
@@ -300,9 +304,11 @@ let menu = (asseMurder) => {
 let initElements = () => {
 	containerCharacters = document.getElementById("containerCharacters");
 	containerListSuspects = document.getElementById("containerListSuspects");
+	containerMurder = document.getElementById("containerMurder");
+	points = document.getElementById("points");
+	name_suspect = document.getElementById("name_suspect");
+	person_murder = document.getElementById("person_murder");
 	btnBlur = document.getElementById("btnBlur");
-
-	console.log("ini", containerCharacters);
 };
 
 let generateListSuspects = (arrSuspects) => {
@@ -310,7 +316,7 @@ let generateListSuspects = (arrSuspects) => {
 	arrSuspects.forEach((character) => {
 		let list = document.createElement("li");
 
-		list.innerHTML = `<p> ${character.id}.-${character.nombre} \n </p> `;
+		list.innerHTML = `<p > ${character.id}.- ${character.nombre} \n </p> `;
 
 		containerListSuspects.appendChild(list);
 	});
@@ -334,7 +340,7 @@ let checkAssasin = (asseMurder, idSuspect) => {
 
 	console.log(
 		"---asesino rela",
-		suspectsArray[id_assasin].id,
+		suspectsArray[id_assasin].nombre,
 		"--- sospechosos",
 		idSuspect
 	);
@@ -342,17 +348,22 @@ let checkAssasin = (asseMurder, idSuspect) => {
 	if (suspectsArray[id_assasin].id !== idSuspect) {
 		arrWitMurd = arrWitMurd.filter((item) => item.id !== idSuspect);
 
-		console.log(arrWitMurd);
-
 		paintingCharacters(arrWitMurd);
 		generateListSuspects(arrWitMurd);
 
-		alert(`no es el asesino ${suspectsArray[idSuspect].nombre}`);
+		name_suspect.innerHTML = `No es el asesino ${suspectsArray[idSuspect].nombre}`;
+		name_suspect.classList = "name_incorrect";
+
+		// alert(`no es el asesino ${suspectsArray[idSuspect].nombre}`);
 	} else if (suspectsArray[id_assasin].id == idSuspect) {
 		console.log("-------------------------- entro");
-		alert(`si  el asesino ${suspectsArray[idSuspect].nombre}`);
+
+		name_suspect.innerHTML = `Si es el asesino ${suspectsArray[idSuspect].nombre}`;
+		name_suspect.classList = "name_correct";
+		// alert(`si es el asesino ${suspectsArray[idSuspect].nombre}`);
 
 		showAssasin();
+		localStorage.clear();
 	}
 };
 
@@ -381,7 +392,7 @@ let paintingCharacters = (arrSuspects) => {
 
 	containerCharacters.innerHTML = "";
 
-	console.log("containerCharacters", containerCharacters);
+	// console.log("containerCharacters", containerCharacters);
 
 	arrSuspects.forEach((character) => {
 		let column = document.createElement("div");
@@ -422,10 +433,8 @@ let matchSuspects = (idCharacter) => {
 };
 
 let play = (arrToPlay) => {
-	console.log("play --_>");
-	alert("emtro");
 	btn = document.getElementById("btnStarPlay");
-	console.log("btn", btn);
+
 	btn.onclick = () => menu(arrToPlay);
 };
 
@@ -437,6 +446,24 @@ let blur = () => {
 let genereMistery = (arrCompleteDied) => {
 	let numAssesin = parseInt(doRandom(arrCompleteDied[0]));
 
+	console.log(
+		"numAssesin",
+		numAssesin,
+		"arrCompleteDied[1].id",
+		arrCompleteDied[1]
+	);
+
+	numAssesin == arrCompleteDied[1]
+		? (numAssesin = parseInt(doRandom(arrCompleteDied[0])))
+		: console.log("no son iguales");
+
+	console.log(
+		"numAssesin 2",
+		numAssesin,
+		"arrCompleteDied[1].id 2",
+		arrCompleteDied[1]
+	);
+
 	let numWeapon = parseInt(doRandom(weaponsArray));
 	let numRoom = parseInt(doRandom(roomsArray));
 
@@ -446,13 +473,21 @@ let genereMistery = (arrCompleteDied) => {
 	localStorage.setItem("id_room", numRoom);
 };
 
+let paintMurder = (id_murder) => {
+	console.log("=====A", id_murder);
+	person_murder.innerHTML = `Mataron a <span> ${suspectsArray[id_murder].nombre} </span> tienes que adivinar quien fue, con que lo mataron y donde lo mato`;
+};
+
 let main = () => {
 	arrToPlay = genereAssesinMurder();
 	// console.log("arrToPlay", arrToPlay[0], "arrToPlay-1", arrToPlay[1]);
 
+	console.log("=====A", arrToPlay[1]);
+
+	paintMurder(arrToPlay[1]);
 	genereMistery(arrToPlay);
 
-	menu(arrToPlay);
+	// menu(arrToPlay);
 
 	initElements();
 
