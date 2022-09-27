@@ -12,6 +12,7 @@ $gray: #3c3c3c;
 $gray-2: #555;
 $blue: #c7f5db;
 $rose: #ee918b;
+$rose-2: #f56d8f;
 
 body {
 	background: $gray;
@@ -68,7 +69,7 @@ body {
 }
 
 .name_incorrect {
-	color: #f56d8f;
+	color: $rose-2;
 	padding: 2%;
 }
 
