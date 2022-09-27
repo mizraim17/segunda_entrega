@@ -21,25 +21,22 @@ const suspectsArray = [
 const roomsArray = ["Cocina", "Oficina", "Zona de Estacionamiento", "Bodega"];
 
 const weaponsArray = [
-	"Olla",
-	"Estrella ninja",
-	"Parrilla Asadora",
-	"Pistola",
-	"Engrapadora",
+	{ id: 0, nombre: "Olla", name_image: "olla" },
+	{ id: 1, nombre: "Sai", name_image: "sai" },
+	{ id: 2, nombre: "Pistola", name_image: "pistola" },
+	{ id: 3, nombre: "Soplete", name_image: "soplete" },
+	{ id: 4, nombre: "Engrapadora en gelatina", name_image: "engrapadora" },
 ];
 
 //Function generate number random depending of size of array
 let doRandom = (arrSearch) => {
-	// console.log("tamaño array", arrSearch.length - 1);
 	let x = Math.round(Math.random() * (arrSearch.length - 1));
-	// console.log("numero random", x);
+
 	return x;
 };
 
 //Generate array without person die because he dont cant be the murder
 let listWithoutMurder = (nameDiedPerson) => {
-	// alert(`nameDiedPerson ${nameDiedPerson}`);
-
 	newList = suspectsArray.filter((item) => item.nombre !== nameDiedPerson);
 	return newList;
 };
@@ -50,9 +47,6 @@ let genereAssesinMurder = () => {
 	let arrayAssesinDied = [],
 		numDiedPerson = parseInt(doRandom(suspectsArray)),
 		listNew = listWithoutMurder(suspectsArray[numDiedPerson].nombre);
-
-	// console.log(`listNew ${listNew.length}`);
-
 	arrayAssesinDied[1] = suspectsArray[numDiedPerson].id;
 	arrayAssesinDied[0] = listNew;
 
@@ -60,27 +54,6 @@ let genereAssesinMurder = () => {
 };
 
 let oportunities = [false, false, false];
-
-let generateInstru = (arrWitMurd) => {
-	const TXT_1 = "Adivina el asesino seleciona su número";
-
-	for (element in arrWitMurd) {
-		console.log(
-			`para instru "${arrWitMurd[element].id} ${arrWitMurd[element].nombre}`
-		);
-	}
-
-	instructions = "";
-
-	for (element in arrWitMurd) {
-		instructions =
-			instructions +
-			`${arrWitMurd[element].id}.-  ${arrWitMurd[element].nombre}\n`;
-		counter++;
-	}
-
-	return TXT_1 + instructions;
-};
 
 //Generate prompr for inputs values and validate if the user win or lose
 
@@ -304,11 +277,14 @@ let menu = (asseMurder) => {
 let initElements = () => {
 	containerCharacters = document.getElementById("containerCharacters");
 	containerListSuspects = document.getElementById("containerListSuspects");
+	containerListWeapons = document.getElementById("containerListWeapons");
+	containerWeapons = document.getElementById("containerWeapons");
 	containerMurder = document.getElementById("containerMurder");
 	points = document.getElementById("points");
 	name_suspect = document.getElementById("name_suspect");
+	name_weapon = document.getElementById("name_weapon");
 	person_murder = document.getElementById("person_murder");
-	btnBlur = document.getElementById("btnBlur");
+	// localStorage.clear();
 };
 
 let generateListSuspects = (arrSuspects) => {
@@ -319,6 +295,17 @@ let generateListSuspects = (arrSuspects) => {
 		list.innerHTML = `<p > ${character.id}.- ${character.nombre} \n </p> `;
 
 		containerListSuspects.appendChild(list);
+	});
+};
+
+let generateListWeapons = (arrWeapons) => {
+	console.log("arrWeapons---list", arrWeapons);
+
+	containerListWeapons.innerHTML = "";
+	arrWeapons.forEach((weapons) => {
+		let list = document.createElement("li");
+		list.innerHTML = `<p class="list-weapons" > ${weapons.id}.- ${weapons.nombre} \n </p> `;
+		containerListWeapons.appendChild(list);
 	});
 };
 
@@ -333,7 +320,6 @@ let checkAssasin = (asseMurder, idSuspect) => {
 	}
 
 	id_assasin = localStorage.getItem("id_assasin");
-
 	console.log("id_assasin", id_assasin);
 
 	let gameWin = 0;
@@ -363,13 +349,12 @@ let checkAssasin = (asseMurder, idSuspect) => {
 		// alert(`si es el asesino ${suspectsArray[idSuspect].nombre}`);
 
 		showAssasin();
-		localStorage.clear();
+		// localStorage.clear();
 	}
 };
 
 let showAssasin = () => {
 	let column = document.createElement("div");
-
 	id_assasin = localStorage.getItem("id_assasin");
 
 	containerCharacters.innerHTML = "";
@@ -387,12 +372,37 @@ let showAssasin = () => {
 	containerCharacters.append(column);
 };
 
+let showWeapon = () => {
+	let column = document.createElement("div");
+	id_weapon = localStorage.getItem("id_weapon");
+
+	console.log("id_weapon===========>", id_weapon);
+
+	containerWeapons.innerHTML = "";
+
+	console.log("containerWeapons", containerWeapons);
+
+	console.log("weapon id----------------------", weaponsArray[id_weapon].id);
+	console.log(
+		"weapon name----------------------",
+		weaponsArray[id_weapon].nombre
+	);
+
+	column.className = "col-md-4 mt-3";
+	column.id = `weapon-${weaponsArray[id_weapon].id}`;
+	column.innerHTML = `<div class="card" style="width: 18rem;">
+  <img src="./weapons/${weaponsArray[id_weapon].name_image}.jpg" id="imgId-${weaponsArray[id_weapon].id}" class="card-img-top " alt="...">
+  <div class="card-body">
+    <h5 class="card-title">${weaponsArray[id_weapon].nombre}</h5>
+    <a href="#" id="btn-poss-weapon-${weaponsArray[id_weapon].id}" class="btn btn-primary">con está arma</a>
+  </div>
+</div>`;
+
+	containerWeapons.append(column);
+};
+
 let paintingCharacters = (arrSuspects) => {
-	// console.log("entro a paintingCharacters", arrSuspects);
-
 	containerCharacters.innerHTML = "";
-
-	// console.log("containerCharacters", containerCharacters);
 
 	arrSuspects.forEach((character) => {
 		let column = document.createElement("div");
@@ -411,10 +421,74 @@ let paintingCharacters = (arrSuspects) => {
 
 		let btnAccuse = document.getElementById(`btn-possAssesin-${character.id}`);
 
-		// console.log("btnAccuse", btnAccuse);
-
 		btnAccuse.onclick = () => checkAssasin(arrSuspects, character.id);
 	});
+};
+
+let paintingWeapons = (arrWeapons) => {
+	containerWeapons.innerHTML = "";
+	let id_weapon = 0;
+
+	arrWeapons.forEach((weapon) => {
+		let column = document.createElement("div");
+
+		// console.log("weapon id----------------------", weapon.id);
+		// console.log("weapon name----------------------", weapon.nombre);
+
+		column.className = "col-md-4 mt-3";
+		column.id = `weapon-${weapon.id}`;
+		column.innerHTML = `<div class="card" style="width: 18rem;">
+  	<img src="./weapons/${weapon.name_image}.jpg" id="imgId-${weapon.id}" class="card-img-top " alt="...">
+  	<div class="card-body">
+    <h5 class="card-title">${weapon.nombre}</h5>
+    <a href="#" id="btn-poss-weapon-${weapon.id}" class="btn btn-primary">tú fuiste</a>
+		</div>
+		</div>`;
+
+		containerWeapons.append(column);
+		let btnWeapons = document.getElementById(`btn-poss-weapon-${weapon.id}`);
+
+		btnWeapons.onclick = () => checkWeapons(arrWeapons, weapon.id);
+	});
+};
+
+let checkWeapons = (arrayWeapons, idWeapon) => {
+	console.log("arrya llega ", arrayWeapons, "id de arma", idWeapon);
+
+	console.log("---arma tecleada id", weaponsArray[idWeapon].nombre);
+
+	const copyArrWeapons = arrayWeapons;
+
+	for (element in copyArrWeapons) {
+		console.log(
+			`despues cut "${copyArrWeapons[element].id}  ${copyArrWeapons[element].nombre}`
+		);
+	}
+
+	id_weapon = localStorage.getItem("id_weapon");
+
+	let gameWin = 0;
+
+	if (weaponsArray[id_weapon].id !== idWeapon) {
+		arrayWeapons = arrayWeapons.filter((item) => item.id !== idWeapon);
+
+		paintingWeapons(arrayWeapons);
+		generateListWeapons(arrayWeapons);
+
+		name_weapon.innerHTML = `No es el arma ${weaponsArray[idWeapon].nombre}`;
+		name_weapon.classList = "name_incorrect";
+
+		// alert(`no es el asesino ${suspectsArray[idSuspect].nombre}`);
+	} else if (weaponsArray[id_weapon].id == idWeapon) {
+		console.log("-------------------------- entro");
+
+		name_weapon.innerHTML = `Si es el arma ${weaponsArray[id_weapon].nombre}`;
+		name_weapon.classList = "name_correct";
+		// alert(`si es el asesino ${suspectsArray[idSuspect].nombre}`);
+
+		showWeapon();
+		// localStorage.clear();
+	}
 };
 
 let matchSuspects = (idCharacter) => {
@@ -438,20 +512,15 @@ let play = (arrToPlay) => {
 	btn.onclick = () => menu(arrToPlay);
 };
 
-let blur = () => {
-	let btn_2 = document.getElementById("btnBlur");
-	btn_2.onclick = () => matchSuspects();
-};
-
 let genereMistery = (arrCompleteDied) => {
 	let numAssesin = parseInt(doRandom(arrCompleteDied[0]));
 
-	console.log(
-		"numAssesin",
-		numAssesin,
-		"arrCompleteDied[1].id",
-		arrCompleteDied[1]
-	);
+	// console.log(
+	// 	"numAssesin",
+	// 	numAssesin,
+	// 	"arrCompleteDied[1].id",
+	// 	arrCompleteDied[1]
+	// );
 
 	numAssesin == arrCompleteDied[1]
 		? (numAssesin = parseInt(doRandom(arrCompleteDied[0])))
@@ -473,18 +542,16 @@ let genereMistery = (arrCompleteDied) => {
 	localStorage.setItem("id_room", numRoom);
 };
 
-let paintMurder = (id_murder) => {
-	console.log("=====A", id_murder);
-	person_murder.innerHTML = `Mataron a <span> ${suspectsArray[id_murder].nombre} </span> tienes que adivinar quien fue, con que lo mataron y donde lo mato`;
-};
+let paintMurder = (id_murder) =>
+	(person_murder.innerHTML = `Mataron a <span> ${suspectsArray[id_murder].nombre} </span> tienes que adivinar quien fue, con que lo mataron y donde lo mato`);
 
 let main = () => {
 	arrToPlay = genereAssesinMurder();
 	// console.log("arrToPlay", arrToPlay[0], "arrToPlay-1", arrToPlay[1]);
-
-	console.log("=====A", arrToPlay[1]);
+	// console.log("=====A", arrToPlay[1]);
 
 	paintMurder(arrToPlay[1]);
+	paintingWeapons(weaponsArray);
 	genereMistery(arrToPlay);
 
 	// menu(arrToPlay);
@@ -492,6 +559,7 @@ let main = () => {
 	initElements();
 
 	generateListSuspects(arrToPlay[0]);
+	generateListWeapons(weaponsArray);
 
 	paintingCharacters(arrToPlay[0]);
 

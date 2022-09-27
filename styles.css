@@ -26,10 +26,24 @@ body {
 	font-style: italic;
 }
 
+.list-weapons {
+	font-family: "Rubik", sans-serif;
+	color: white;
+	font-weight: 500;
+	font-style: italic;
+}
+
 .margin-5 {
 	margin-top: 2%;
 }
 .tit-list-suspects {
+	padding-top: 8%;
+	color: #c7f5db;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.tit-list-weapons {
 	padding-top: 8%;
 	color: #c7f5db;
 	font-size: 20px;
@@ -42,7 +56,14 @@ body {
 	font-weight: bold;
 }
 
-#name_suspect {
+.tit-weapon {
+	color: #c7f5db;
+	font-size: 22px;
+	font-weight: bold;
+}
+
+#name_suspect,
+#name_weapon {
 	font-size: 18px;
 	font-weight: bold;
 }
